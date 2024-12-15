@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="img/institutoaba.png" type="image/png"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de Presenças</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 175vh;
+            background-image: url('img/fundoinstitutovertical.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 60%;
+            max-width: 800px;
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 30px;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 2px solid #ccc;
+        }
+        .logo img {
+            height: 80px;
+        }
+        .tabs {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s, transform 0.3s;
+            font-weight: bold;
+        }
+        .tab-button.active {
+            border-bottom: 2px solid #000;
+        }
+        .tab-button:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+        .form-container {
+            padding: 20px;
+            text-align: left;
+        }
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+        .form-container input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-container input[type="number"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="img/institutologo.png" alt="Instituto Logo">
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-button active">Tabela de Gráficos</button>
+            <a href="tabelaatraso.php"><button class="tab-button" id="tabelaatraso">Chegadas atrasadas</button></a>
+            <a href="index.php"><button class="tab-button" id="efeito">Voltar</button></a>
+        </div>
+        
+        <h1>Tabela de Gráficos</h1>
+
+        <div class="form-container">
+            <label for="NmbAulas">Número de Aulas:</label>
+            <input type="number" id="NmbAulas" placeholder="Digite o número de aulas">
+
+            <label for="Presenca">Presença do Aluno:</label>
+            <input type="number" id="Presenca" placeholder="Digite a presença do aluno">
+
+            <label for="Faltas">Faltas:</label>
+            <input type="number" id="Faltas" placeholder="Faltas (calculadas automaticamente)" disabled>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <!-- Importação do Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Presença', 'Faltas'],
+                datasets: [{
+                    label: 'Dados do Aluno',
+                    data: [0, 0],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)', // Presença
+                        'rgba(255, 99, 132, 0.6)'  // Faltas
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Quantidade'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Função que atualiza o gráfico automaticamente
+        function atualizarGrafico() {
+            const nmbAulas = parseFloat(document.getElementById('NmbAulas').value) || 0;
+            let presenca = parseFloat(document.getElementById('Presenca').value) || 0;
+            let faltas = nmbAulas - presenca; // Cálculo automático de faltas
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Verifica se a presença é maior que o número de aulas
+            if (presenca > nmbAulas) {
+                errorMessage.textContent = "Erro: A presença não pode ser maior que o número de aulas.";
+                return;
+            }
+
+            // Validação para evitar valores negativos de faltas
+            if (presenca < 0 || faltas < 0) {
+                errorMessage.textContent = "Erro: A presença e as faltas não podem ser negativas.";
+                return;
+            }
+
+            errorMessage.textContent = ""; // Limpa a mensagem de erro
+
+            // Atualiza o campo de faltas automaticamente
+            document.getElementById('Faltas').value = faltas;
+
+            // Define o limite máximo no eixo Y
+            myChart.options.scales.y.max = nmbAulas;
+
+            // Atualiza os dados do gráfico
+            myChart.data.datasets[0].data = [presenca, faltas];
+            myChart.update();
+        }
+
+        // Adiciona os eventos para recalcular e atualizar o gráfico automaticamente
+        document.getElementById('NmbAulas').addEventListener('input', atualizarGrafico);
+        document.getElementById('Presenca').addEventListener('input', atualizarGrafico);
+    </script>
+</body>
+</html>

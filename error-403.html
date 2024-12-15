@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Controle de atrasos/saídas</title>
+	<link rel="icon" href="img/institutoaba.png" type="image/png"> 
+
+	<link rel="stylesheet" href="css/style.css">
+
+	<style>
+	.cookieConsentContainer{
+		z-index:999;
+		width:350px;
+		min-height:20px;
+		box-sizing:border-box;
+		padding:30px 30px 30px 30px;
+		background:#232323;
+		overflow:hidden;
+		position:fixed;
+		bottom:30px;
+		right:30px;
+		display:none
+	}
+	
+	.cookieConsentContainer .cookieTitle a{
+		font-family:OpenSans,arial,sans-serif;
+		color:#fff;
+		font-size:22px;
+		line-height:20px;
+		display:block
+	}
+	
+	.cookieConsentContainer .cookieDesc p{
+		margin:0;
+		padding:0;
+		font-family:OpenSans,arial,sans-serif;
+		color:#fff;
+		font-size:13px;
+		line-height:20px;
+		display:block;
+		margin-top:10px
+	}
+	
+	.cookieConsentContainer .cookieDesc a{
+		font-family:OpenSans,arial,sans-serif;
+		color:#fff;
+		text-decoration:underline
+	}
+	
+	.cookieConsentContainer .cookieButton a{
+		display:inline-block;
+		font-family:OpenSans,arial,sans-serif;
+		color:#fff;
+		font-size:14px;
+		font-weight:700;
+		margin-top:14px;
+		background:#000;
+		box-sizing:border-box;
+		padding:15px 24px;
+		text-align:center;
+		transition:background .3s
+	}
+	
+	.cookieConsentContainer .cookieButton a:hover{
+		cursor:pointer;
+		background:#3e9b67
+	}
+	
+	@media (max-width:980px){
+		.cookieConsentContainer{
+			bottom:0!important;
+			left:0!important;
+			width:100%!important
+		}
+	}
+	</style>
+</head>
+<body>
+    <div id="error">
+        <div class="container text-center pt-32">
+			<h1 class='error-title'>403</h1>
+			<p>Voc&ecirc; n&atilde;o tem permiss&atildeo para entrar no sistema.</p>
+			<a href="index.html" class='btn btn-primary'>Clique Aqui</a>
+		</div>
+
+        <div class="footer pt-32">
+            <p class="text-center">Copyright &copy; 2024 Eduardo Backes Klauck & Samuel Nikititz e .</p>
+        </div>
+    </div>
+</body>
+</html>
